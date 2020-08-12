@@ -26,15 +26,21 @@ logger()
 }
 
 #update config and code when wlan is true
-wlan=$(check_wifi)
-echo $wlan
-if [ $wlan = true ]
-then
-echo TRUE
-sudo /bin/bash ./update_config.sh
-sudo /bin/bash ./update_code.sh 
-echo $(logger "Updated latest version" )
-else
-echo FALSE
-echo NETWORK NOT AVAILABLE
-fi
+while [ true ]; do
+
+	wlan=$(check_wifi)
+	if [ $wlan = true ]; then
+		$(logger "wifi enable")
+		sudo /bin/bash ./update_config.sh
+		$(logger "config updated")
+		sudo /bin/bash ./update_code.sh 
+		$(logger "code updated")
+		$(logger "Updated latest version" )
+		break
+	else
+		#$(logger "wifi disable, enter wifi connection loop")
+		echo "try to connect wifi..."
+		sleep 3
+	fi
+done
+echo "Updadte Complete"
