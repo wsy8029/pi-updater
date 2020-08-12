@@ -30,17 +30,20 @@ while [ true ]; do
 
 	wlan=$(check_wifi)
 	if [ $wlan = true ]; then
+		sudo python3 /home/pi/pi-upddater/led/on_blue.py
 		$(logger "wifi enable")
-		sudo /bin/bash ./update_config.sh
+		sudo /bin/bash /home/pi/pi-updater/update_config.sh
 		$(logger "config updated")
-		sudo /bin/bash ./update_code.sh 
+		sudo /bin/bash /home/pi/pi-updater/update_code.sh 
 		$(logger "code updated")
 		$(logger "Updated latest version" )
+		sudo python3 /home/pi/pi-updater/led/blink_rgb1.py
 		break
 	else
 		#$(logger "wifi disable, enter wifi connection loop")
 		echo "try to connect wifi..."
-		sleep 3
+		sudo python3 /home/pi/pi-updater/led/blink_yellow1.py
+		sleep 2 
 	fi
 done
 echo "Updadte Complete"
