@@ -48,13 +48,19 @@ while [ true ]; do
 	if [ $wlan = true ]; then
 		sudo python3 ${path_updater}led/on_blue.py
 		$(logger "[WIFI] wifi enable")
-		sudo /bin/bash ${path_updater}update_config.sh
-		$(logger "[UPDATE] config updated")
-		sudo /bin/bash ${path_updater}update_code.sh 
-		$(logger "[UPDATE] code updated")
-		$(logger "[UPDATE] Updated latest version" )
-		sudo python3 ${path_updater}led/blink_rgb1.py
-		break
+		latest=$(check_version)
+		if [ $latest = true ]; then
+			$(logger "[VERSION] already latest version")
+			break
+		else
+			$(logger "[VERSION] local version is older then latest version. Start update.")
+			sudo /bin/bash ${path_updater}update_config.sh
+			$(logger "[UPDATE] config updated")
+			sudo /bin/bash ${path_updater}update_code.sh 
+			$(logger "[UPDATE] code updated")
+			$(logger "[UPDATE] Update complete" )
+			sudo python3 ${path_updater}led/blink_rgb1.py
+			break
 	else
 		$(logger "[WIFI] wifi disable, trying to connect wifi...")
 		sudo /bin/cp -f ${path_updater}wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
