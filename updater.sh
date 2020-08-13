@@ -1,9 +1,10 @@
 #!bin/bash
 
-path=/home/pi/
+path_updater=/usr/bin/pi-updater/
+path_workspace=/home/pi/workspace/
 # generate update_log.txt file at workspace folder
-sudo touch /home/pi/workspace/update_log.txt
-sudo chmod 666 /home/pi/workspace/update_log.txt
+sudo touch ${path_workspace}.update_log
+sudo chmod 666 ${path_workspace}.update_log
 
 # check wifi connection and return boolean
 check_wifi()
