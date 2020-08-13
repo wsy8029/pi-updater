@@ -1,7 +1,8 @@
 #!bin/bash
 
-path_updater=/usr/bin/pi-updater/
+path_updater=/usr/src/pi-updater/
 path_workspace=/home/pi/workspace/
+
 # generate update_log.txt file at workspace folder
 sudo touch ${path_workspace}.update_log
 sudo chmod 666 ${path_workspace}.update_log
@@ -25,10 +26,11 @@ check_version()
 	ver_latest=`curl https://raw.githubusercontent.com/wsy8029/pi-updater/master/version`
 	ver_local=$(<version)	
 	if [ $ver_latest == $ver_local ]; then
-		echo dd > ${path}same
+		latest=true
 	else
-		echo dd > diff
+		latest=false
 	fi
+	echo $latest
 }
 
 
@@ -36,28 +38,33 @@ check_version()
 logger()
 {
 	msg=$1
-	sudo echo -e `date`: $msg >> /home/pi/workspace/update_log.txt 
+	sudo echo -e `date`: $msg >> ${path_workspace}.update_log 
 }
-$(check_version)
+
 # update config and code when wlan is true
 while [ true ]; do
 
 	wlan=$(check_wifi)
 	if [ $wlan = true ]; then
-		sudo python3 /home/pi/pi-updater/led/on_blue.py
-		$(logger "wifi enable")
-		sudo /bin/bash /home/pi/pi-updater/update_config.sh
-		$(logger "config updated")
-		sudo /bin/bash /home/pi/pi-updater/update_code.sh 
-		$(logger "code updated")
-		$(logger "Updated latest version" )
-		sudo python3 /home/pi/pi-updater/led/blink_rgb1.py
+		sudo python3 ${path_updater}led/on_blue.py
+		$(logger "[WIFI] wifi enable")
+		sudo /bin/bash ${path_updater}update_config.sh
+		$(logger "[UPDATE] config updated")
+		sudo /bin/bash ${path_updater}update_code.sh 
+		$(logger "[UPDATE] code updated")
+		$(logger "[UPDATE] Updated latest version" )
+		sudo python3 ${path_updater}led/blink_rgb1.py
 		break
 	else
-		#$(logger "wifi disable, enter wifi connection loop")
-		echo "try to connect wifi..."
-		sudo python3 /home/pi/pi-updater/led/blink_yellow1.py
-		sleep 2 
+		$(logger "[WIFI] wifi disable, trying to connect wifi...")
+		sudo /bin/cp -f ${path_updater}wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
+		sudo wpa_cli -i wlan0 reconfigure
+		sudo ifconfig wlan0 down
+		sudo ifconfig wlan0 up
+		sudo python3 ${path_updater}led/on_yellow.py
+		sleep 5	
+		sudo python3 ${path_updater}led/off.py
+		sleep 1
 	fi
 done
 echo "Updadte Complete"
