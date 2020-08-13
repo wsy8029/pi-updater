@@ -1,10 +1,10 @@
 #!bin/bash
 
-#generate update_log.txt file at workspace folder
+# generate update_log.txt file at workspace folder
 sudo touch /home/pi/workspace/update_log.txt
 sudo chmod 666 /home/pi/workspace/update_log.txt
 
-#check wifi connection and return boolean
+# check wifi connection and return boolean
 check_wifi()
 {
 	tmp=`iwconfig wlan0|grep ESSID:off`
@@ -18,14 +18,21 @@ check_wifi()
 	echo $wlan
 }
 
-#save log with time
+# check local updater version compare with latest github version 
+check_version()
+{
+	
+}
+
+
+# save log with time
 logger()
 {
 	msg=$1
 	sudo echo -e `date`: $msg >> /home/pi/workspace/update_log.txt 
 }
 
-#update config and code when wlan is true
+# update config and code when wlan is true
 while [ true ]; do
 
 	wlan=$(check_wifi)
