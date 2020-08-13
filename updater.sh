@@ -23,7 +23,7 @@ check_wifi()
 # check local updater version compare with latest github version 
 check_version()
 {
-	ver_latest=`curl https://raw.githubusercontent.com/wsy8029/pi-updater/master/version`
+	ver_latest=`sudo curl https://raw.githubusercontent.com/wsy8029/pi-updater/master/version`
 	ver_local=$(<version)	
 	if [ $ver_latest == $ver_local ]; then
 		latest=true
@@ -48,7 +48,11 @@ while [ true ]; do
 	if [ $wlan = true ]; then
 		sudo python3 ${path_updater}led/on_blue.py
 		$(logger "[WIFI] wifi enable")
-		latest=$(check_version)
+		{
+			latest=$(check_version)
+		} || {
+			latest=$(check_version)
+		}	
 		if [ $latest = true ]; then
 			$(logger "[VERSION] already latest version")
 			break
@@ -61,6 +65,7 @@ while [ true ]; do
 			$(logger "[UPDATE] Update complete" )
 			sudo python3 ${path_updater}led/blink_rgb1.py
 			break
+		fi
 	else
 		$(logger "[WIFI] wifi disable, trying to connect wifi...")
 		sudo /bin/cp -f ${path_updater}wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
@@ -68,7 +73,7 @@ while [ true ]; do
 		sudo ifconfig wlan0 down
 		sudo ifconfig wlan0 up
 		sudo python3 ${path_updater}led/on_yellow.py
-		sleep 5	
+		sleep 10	
 		sudo python3 ${path_updater}led/off.py
 		sleep 1
 	fi

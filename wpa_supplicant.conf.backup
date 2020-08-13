@@ -1,0 +1,23 @@
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=US
+
+network={
+	ssid="LUXROBO-5G-3"
+	psk="rollingout4!5#"
+}
+
+network={
+    ssid="DREAMPLUS_13F"
+    psk="dreamtt3!"
+}
+
+network={
+    ssid="DREAMPLUS_GUEST"
+    psk="welcome#"
+}
+
+network={
+    ssid="LUXROBO-5G-4"
+    psk="rollingout4!5#"
+}
