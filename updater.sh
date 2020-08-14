@@ -7,6 +7,13 @@ path_workspace=/home/pi/workspace/
 sudo touch ${path_workspace}.update_log
 sudo chmod 666 ${path_workspace}.update_log
 
+# save log with time
+logger()
+{
+	msg=$1
+	sudo echo -e `date`: $msg >> ${path_workspace}.update_log 
+}
+
 # check wifi connection and return boolean
 check_wifi()
 {
@@ -23,22 +30,17 @@ check_wifi()
 # check local updater version compare with latest github version 
 check_version()
 {
-	ver_latest=`sudo curl https://raw.githubusercontent.com/wsy8029/pi-updater/master/version`
-	ver_local=$(<version)	
+	#ver_latest=`sudo curl https://raw.githubusercontent.com/wsy8029/pi-updater/master/version`
+	ver_latest=$(wget https://raw.githubusercontent.com/wsy8029/pi-updater/master/version -q -O -)
+	$(logger "[VERSION] latest version is $ver_latest")
+	ver_local=$(<${path_updater}version)	
+	$(logger "[VERSION] current local version is $ver_local")
 	if [ $ver_latest == $ver_local ]; then
 		latest=true
 	else
 		latest=false
 	fi
 	echo $latest
-}
-
-
-# save log with time
-logger()
-{
-	msg=$1
-	sudo echo -e `date`: $msg >> ${path_workspace}.update_log 
 }
 
 # update config and code when wlan is true
@@ -48,13 +50,9 @@ while [ true ]; do
 	if [ $wlan = true ]; then
 		sudo python3 ${path_updater}led/on_blue.py
 		$(logger "[WIFI] wifi enable")
-		{
-			latest=$(check_version)
-		} || {
-			latest=$(check_version)
-		}	
+		latest=$(check_version)
 		if [ $latest = true ]; then
-			$(logger "[VERSION] already latest version")
+			$(logger "[VERSION] local version is already up to date.")
 			break
 		else
 			$(logger "[VERSION] local version is older then latest version. Start update.")
