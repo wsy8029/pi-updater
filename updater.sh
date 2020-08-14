@@ -56,7 +56,7 @@ check_version()
 while [ true ]; do
 
 	wlan=$(check_wifi)
-	if [ $wlan == true ]; then
+	if [ "$wlan" == "true" ]; then
 		sudo python3 ${path_updater}led/on_blue.py
 		$(logger "[WIFI] wifi enable")
 		latest=$(check_version)
