@@ -53,6 +53,7 @@ while [ true ]; do
 		latest=$(check_version)
 		if [ $latest = true ]; then
 			$(logger "[VERSION] local version is already up to date.")
+			sudo python3 ${path_updater}led/blink_rgb1.py
 			break
 		else
 			$(logger "[VERSION] local version is older then latest version. Start update.")
