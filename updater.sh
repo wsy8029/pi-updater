@@ -37,7 +37,7 @@ check_version()
 	while [ "$ver_latest" == "" ]; do
 		$(logger "[VERSION] cannot get latest version, retry...")
 #		sudo python3 ${path_updater}led/on_red.py
-    sudo python3 ${path_updater}led/on_orange.py
+    		sudo python3 ${path_updater}led/on_orange.py
 		ver_latest=$(wget https://raw.githubusercontent.com/wsy8029/pi-updater/master/version -q -O -)
 		sudo python3 ${path_updater}led/off.py
 	done
@@ -53,6 +53,8 @@ check_version()
 	echo $latest
 }
 
+$(logger "========================= Update Process Start =========================")
+
 # update config and code when wlan is true
 while [ true ]; do
 
@@ -64,7 +66,7 @@ while [ true ]; do
 		if [ $latest == true ]; then
 			$(logger "[VERSION] local version is already up to date.")
 #			sudo python3 ${path_updater}led/blink_rgb1.py
-      sudo python3 ${path_updater}led/on_blue.py
+      			sudo python3 ${path_updater}led/on_blue.py
 			break
 		else
 			$(logger "[VERSION] local version is older then latest version. Start update.")
@@ -85,9 +87,10 @@ while [ true ]; do
 		sudo ifconfig wlan0 down
 		sudo ifconfig wlan0 up
 		sudo python3 ${path_updater}led/on_orange.py
-		sleep 10	
+		sleep 5	
 		sudo python3 ${path_updater}led/off.py
 		sleep 1
 	fi
 done
-echo "Updadte Complete"
+$(logger "========================= Update Process End =========================")
+echo "Update Complete"
