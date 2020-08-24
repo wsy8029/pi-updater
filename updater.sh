@@ -36,7 +36,8 @@ check_version()
 	#ver_latest=`sudo curl https://raw.githubusercontent.com/wsy8029/pi-updater/master/version`
 	while [ "$ver_latest" == "" ]; do
 		$(logger "[VERSION] cannot get latest version, retry...")
-		sudo python3 ${path_updater}led/on_red.py
+#		sudo python3 ${path_updater}led/on_red.py
+    sudo python3 ${path_updater}led/on_orange.py
 		ver_latest=$(wget https://raw.githubusercontent.com/wsy8029/pi-updater/master/version -q -O -)
 		sudo python3 ${path_updater}led/off.py
 	done
@@ -57,12 +58,13 @@ while [ true ]; do
 
 	wlan=$(check_wifi)
 	if [ "$wlan" == "true" ]; then
-		sudo python3 ${path_updater}led/on_blue.py
+		sudo python3 ${path_updater}led/on_orange.py
 		$(logger "[WIFI] wifi enable")
 		latest=$(check_version)
 		if [ $latest == true ]; then
 			$(logger "[VERSION] local version is already up to date.")
-			sudo python3 ${path_updater}led/blink_rgb1.py
+#			sudo python3 ${path_updater}led/blink_rgb1.py
+      sudo python3 ${path_updater}led/on_blue.py
 			break
 		else
 			$(logger "[VERSION] local version is older then latest version. Start update.")
@@ -73,7 +75,7 @@ while [ true ]; do
 			ver_updated=$(wget https://raw.githubusercontent.com/wsy8029/pi-updater/master/version -q -O -)
 			$(logger "[UPDATE] Update complete (ver : $ver_updated )" )
 			sudo echo $ver_updated > ${path_updater}version
-			sudo python3 ${path_updater}led/blink_rgb1.py
+			sudo python3 ${path_updater}led/on_blue.py
 			break
 		fi
 	else
@@ -82,7 +84,7 @@ while [ true ]; do
 		sudo wpa_cli -i wlan0 reconfigure
 		sudo ifconfig wlan0 down
 		sudo ifconfig wlan0 up
-		sudo python3 ${path_updater}led/on_yellow.py
+		sudo python3 ${path_updater}led/on_orange.py
 		sleep 10	
 		sudo python3 ${path_updater}led/off.py
 		sleep 1
