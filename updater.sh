@@ -80,16 +80,16 @@ while [ true ]; do
 			sudo python3 ${path_updater}led/on_blue.py
 			break
 		fi
-	else
-		$(logger "[WIFI] wifi disable, trying to connect wifi...")
-		sudo /bin/cp -f ${path_updater}wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
-		sudo wpa_cli -i wlan0 reconfigure
-		sudo ifconfig wlan0 down
-		sudo ifconfig wlan0 up
-		sudo python3 ${path_updater}led/on_orange.py
-		sleep 5	
-		sudo python3 ${path_updater}led/off.py
-		sleep 1
+# 	else
+# 		$(logger "[WIFI] wifi disable, trying to connect wifi...")
+# 		sudo /bin/cp -f ${path_updater}wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
+# 		sudo wpa_cli -i wlan0 reconfigure
+# 		sudo ifconfig wlan0 down
+# 		sudo ifconfig wlan0 up
+# 		sudo python3 ${path_updater}led/on_orange.py
+# 		sleep 5	
+# 		sudo python3 ${path_updater}led/off.py
+# 		sleep 1
 	fi
 done
 $(logger "========================= Update Process End =========================")
