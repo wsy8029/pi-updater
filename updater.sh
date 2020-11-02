@@ -72,7 +72,9 @@ while [ true ]; do
 			$(logger "[VERSION] local version is older then latest version. Start update.")
 			cd /usr/src/pi-updater/
 			$(logger "[UPDATE] git pull...")
-			sudo git stash
+			sudo git fetch --all
+      sudo git reset --hard origin/master
+      sudo git pull origin master
 			sudo git pull
 			$(logger "[UPDATE] git pull completed")
 			sudo /bin/bash ${path_updater}update_config.sh
