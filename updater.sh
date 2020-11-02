@@ -70,9 +70,13 @@ while [ true ]; do
 			break
 		else
 			$(logger "[VERSION] local version is older then latest version. Start update.")
+			cd /usr/src/pi-updater/
+			$(logger "[UPDATE] git pull...")
+			sudo git pull
+			$(logger "[UPDATE] git pull completed")
 			sudo /bin/bash ${path_updater}update_config.sh
 			$(logger "[UPDATE] config updated")
-			sudo /bin/bash ${path_updater}update_code.sh 
+			sudo /bin/bash ${path_updater}update_code.sh
 			$(logger "[UPDATE] code updated")
 			ver_updated=$(wget https://raw.githubusercontent.com/wsy8029/pi-updater/master/version -q -O -)
 			$(logger "[UPDATE] Update complete (ver : $ver_updated )" )
