@@ -73,9 +73,8 @@ while [ true ]; do
 			cd /usr/src/pi-updater/
 			$(logger "[UPDATE] git pull...")
 			sudo git fetch --all
-      sudo git reset --hard origin/master
-      sudo git pull origin master
-			sudo git pull
+			sudo git reset --hard origin/master
+			sudo git pull origin master
 			$(logger "[UPDATE] git pull completed")
 			sudo /bin/bash ${path_updater}update_config.sh
 			$(logger "[UPDATE] config updated")
